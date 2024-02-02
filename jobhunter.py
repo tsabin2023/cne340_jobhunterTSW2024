@@ -1,8 +1,17 @@
+# Tyler Sabin
+# CNE340 Winter Quarter 2024
+# 2/2/2024
+# follow instructions here and on Canvas to complete program
+# https://rtc.instructure.com/courses/2439016/assignments/31830474?module_item_id=79735018
+# code below modified by Tyler Sabin and Brian Huang
+# https://github.com/profproix/cne340_jobhunter
+
+# import required libraries and install packages
 import mysql.connector
 import time
 import json
 import requests
-from datetime import date
+from datetime import date # why isn't this lighting up
 import html2text
 
 
@@ -10,7 +19,7 @@ import html2text
 # You may need to edit the connect function based on your local settings.#I made a password for my database because it is important to do so. Also make sure MySQL server is running or it will not connect
 def connect_to_sql():
     conn = mysql.connector.connect(user='root', password='',
-                                   host='127.0.0.1', database='cne340')
+                                   host='127.0.0.1', database='cne340test')
     return conn
 
 
@@ -19,9 +28,10 @@ def create_tables(cursor):
     # Creates table
     # Must set Title to CHARSET utf8 unicode Source: http://mysql.rjweb.org/doc.php/charcoll.
     # Python is in latin-1 and error (Incorrect string value: '\xE2\x80\xAFAbi...') will occur if Description is not in unicode format due to the json data
+    # cursor.execute("ALTER TABLE jobs CHANGE company company VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;") with help
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs (id INT PRIMARY KEY auto_increment, Job_id varchar(50) , 
     company varchar (300), Created_at DATE, url varchar(30000), Title LONGBLOB, Description LONGBLOB ); ''')
-
+    cursor.execute("ALTER TABLE jobs CHANGE company company VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
 
 # Query the database.
 # You should not need to edit anything in this function
@@ -79,11 +89,12 @@ def add_or_delete_job(jobpage, cursor):
         is_job_found = len(
         cursor.fetchall()) > 0  # https://stackoverflow.com/questions/2511679/python-number-of-rows-affected-by-cursor-executeselect
         if is_job_found:
+            pass
 
         else:
             # INSERT JOB
             # Add in your code here to notify the user of a new posting. This code will notify the new user
-
+            pass
 
 
 # Setup portion of the program. Take arguments and set up the script
