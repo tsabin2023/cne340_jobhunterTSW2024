@@ -63,8 +63,8 @@ def check_if_job_exists(cursor, jobdetails):
 # Deletes job
 def delete_job(cursor, jobdetails):
     ##Add your code here
-    # job_description = html2text.html2text(jobdetails['description'])
-    # query = "DELETE FROM fantasy WHERE Description = \"%s\"" % job_description
+    job_description = html2text.html2text(jobdetails['description'])
+    query = "DELETE FROM fantasy WHERE Description = \"%s\"" % job_description
     # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
