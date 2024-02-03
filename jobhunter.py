@@ -32,6 +32,7 @@ def create_tables(cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs (id INT PRIMARY KEY auto_increment, Job_id varchar(50) , 
     company varchar (300), Created_at DATE, url varchar(30000), Title LONGBLOB, Description LONGBLOB ); ''')
     cursor.execute("ALTER TABLE jobs CHANGE company company VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
+    return
 
 # Query the database.
 # You should not need to edit anything in this function
@@ -54,13 +55,17 @@ def add_new_job(cursor, jobdetails):
 # Check if new job
 def check_if_job_exists(cursor, jobdetails):
     ##Add your code here
-    query = "UPDATE"
+    job_description = html2text.html2text(jobdetails['description'])
+    query = "SELECT * FROM jobs WHERE Description= \"%s\"" % job_description
+    # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
 # Deletes job
 def delete_job(cursor, jobdetails):
     ##Add your code here
-    query = "UPDATE"
+    # job_description = html2text.html2text(jobdetails['description'])
+    # query = "DELETE FROM fantasy WHERE Description = \"%s\"" % job_description
+    # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
 
@@ -89,12 +94,14 @@ def add_or_delete_job(jobpage, cursor):
         is_job_found = len(
         cursor.fetchall()) > 0  # https://stackoverflow.com/questions/2511679/python-number-of-rows-affected-by-cursor-executeselect
         if is_job_found:
-            pass
+            # I need to return cursor or something like the job name or current job list
+            # Do I need to inform the user that the job already exists?
+            # return query_sql(cursor, query)
 
         else:
             # INSERT JOB
             # Add in your code here to notify the user of a new posting. This code will notify the new user
-            pass
+            # add_new_job(cursor, jobdetails)
 
 
 # Setup portion of the program. Take arguments and set up the script
