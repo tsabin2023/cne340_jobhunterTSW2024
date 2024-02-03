@@ -1,6 +1,6 @@
 # Tyler Sabin
 # CNE340 Winter Quarter 2024
-# 2/2/2024
+# 2/3/2024
 # follow instructions here and on Canvas to complete program
 # https://rtc.instructure.com/courses/2439016/assignments/31830474?module_item_id=79735018
 # code below modified by Tyler Sabin and Brian Huang
@@ -11,7 +11,7 @@ import mysql.connector
 import time
 import json
 import requests
-from datetime import date # why isn't this lighting up
+import datetime # why isn't this lighting up
 import html2text
 
 
@@ -32,7 +32,7 @@ def create_tables(cursor):
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs (id INT PRIMARY KEY auto_increment, Job_id varchar(50) , 
     company varchar (300), Created_at DATE, url varchar(30000), Title LONGBLOB, Description LONGBLOB ); ''')
     cursor.execute("ALTER TABLE jobs CHANGE company company VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
-    return
+
 
 # Query the database.
 # You should not need to edit anything in this function
@@ -46,8 +46,34 @@ def add_new_job(cursor, jobdetails):
     # extract all required columns
     description = html2text.html2text(jobdetails['description'])
     date = jobdetails['publication_date'][0:10]
+
+
+    print(description)
+    print(type(description))
+    print()
+    print(date)
+    print(type(date))
+
+    print()
+    print()
+
+    print(jobdetails)
+
+    # getting the difference between two date objects
+    cursor.execute("SELECT * FROM jobs")
+    row = cursor.fetchall() # [ (1,2,3,4) ]
+    print(row[0][3])
+    print(type(row[0][3]))
+    time1 = row[0][3]
+    time2 = datetime.date.today()
+    print(type(time2))
+    diff = time2 - time1
+    print(diff.days)
+
+
+    # isn't inserting all the data, see table
     query = cursor.execute("INSERT INTO jobs( Description, Created_at " ") "
-               "VALUES(%s,%s)", (  description, date))
+                        "VALUES(%s,%s)", (description, date))
      # %s is what is needed for Mysqlconnector as SQLite3 uses ? the Mysqlconnector uses %s
     return query_sql(cursor, query)
 
@@ -56,7 +82,7 @@ def add_new_job(cursor, jobdetails):
 def check_if_job_exists(cursor, jobdetails):
     ##Add your code here
     job_description = html2text.html2text(jobdetails['description'])
-    query = "SELECT * FROM jobs WHERE Description= \"%s\"" % job_description
+    query = "SELECT * FROM jobs WHERE Description = \"%s\"" % job_description
     # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
@@ -91,18 +117,20 @@ def add_or_delete_job(jobpage, cursor):
     for jobdetails in jobpage['jobs']:  # EXTRACTS EACH JOB FROM THE JOB LIST. It errored out until I specified jobs. This is because it needs to look at the jobs dictionary from the API. https://careerkarma.com/blog/python-typeerror-int-object-is-not-iterable/
         # Add in your code here to check if the job already exists in the DB
         check_if_job_exists(cursor, jobdetails)
-        is_job_found = len(
-        cursor.fetchall()) > 0  # https://stackoverflow.com/questions/2511679/python-number-of-rows-affected-by-cursor-executeselect
+        is_job_found = len(cursor.fetchall()) > 0  # https://stackoverflow.com/questions/2511679/python-number-of-rows-affected-by-cursor-executeselect
         if is_job_found:
             # I need to return cursor or something like the job name or current job list
             # Do I need to inform the user that the job already exists?
             # return query_sql(cursor, query)
-
+            print("job already exists")
         else:
             # INSERT JOB
             # Add in your code here to notify the user of a new posting. This code will notify the new user
             # add_new_job(cursor, jobdetails)
+            print("new job found")
+            add_new_job(cursor, jobdetails)
 
+        break
 
 # Setup portion of the program. Take arguments and set up the script
 # You should not need to edit anything here.
@@ -113,9 +141,10 @@ def main():
     cursor = conn.cursor()
     create_tables(cursor)
 
-    while (1):  # Infinite Loops. Only way to kill it is to crash or manually crash it. We did this as a background process/passive scraper
+    while True:  # Infinite Loops. Only way to kill it is to crash or manually crash it. We did this as a background process/passive scraper
         jobhunt(cursor)
-        time.sleep(21600)  # Sleep for 1h, this is ran every hour because API or web interfaces have request limits. Your reqest will get blocked.
+        # check job expired
+        time.sleep(21600)  # Sleep for 6h, this is ran every hour because API or web interfaces have request limits. Your reqest will get blocked.
 
 
 # Sleep does a rough cycle count, system is not entirely accurate
