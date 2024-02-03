@@ -50,7 +50,6 @@ def add_new_job(cursor, jobdetails):
      # %s is what is needed for Mysqlconnector as SQLite3 uses ? the Mysqlconnector uses %s
     return query_sql(cursor, query)
 
-# TODO Query table for already-existing job entries
 # Check if new job
 def check_if_job_exists(cursor, jobdetails):
     ##Add your code here
