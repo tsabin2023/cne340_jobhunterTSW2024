@@ -1,6 +1,6 @@
 # Tyler Sabin
 # CNE340 Winter Quarter 2024
-# 2/3/2024
+# 2/4/2024
 # follow instructions here and on Canvas to complete program
 # https://rtc.instructure.com/courses/2439016/assignments/31830474?module_item_id=79735018
 # code below modified by Tyler Sabin and Brian Huang
@@ -59,18 +59,6 @@ def add_new_job(cursor, jobdetails):
 
     print(jobdetails)
 
-    # getting the difference between two date objects
-    cursor.execute("SELECT * FROM jobs")
-    row = cursor.fetchall() # [ (1,2,3,4) ]
-    print(row[0][3])
-    print(type(row[0][3]))
-    time1 = row[0][3]
-    time2 = datetime.date.today()
-    print(type(time2))
-    diff = time2 - time1
-    print(diff.days)
-
-
     # isn't inserting all the data, see table
     query = cursor.execute("INSERT INTO jobs( Description, Created_at " ") "
                         "VALUES(%s,%s)", (description, date))
@@ -81,16 +69,16 @@ def add_new_job(cursor, jobdetails):
 # Check if new job
 def check_if_job_exists(cursor, jobdetails):
     ##Add your code here
-    job_description = html2text.html2text(jobdetails['description'])
-    query = "SELECT * FROM jobs WHERE Description = \"%s\"" % job_description
+    job_id_variable = html2text.html2text(jobdetails['Job_id'])
+    query = "SELECT * FROM jobs WHERE Description = \"%s\"" % job_id_variable
     # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
 # Deletes job
 def delete_job(cursor, jobdetails):
     ##Add your code here
-    job_description = html2text.html2text(jobdetails['description'])
-    query = "DELETE FROM fantasy WHERE Description = \"%s\"" % job_description
+    job_id_variable = html2text.html2text(jobdetails['Job_id'])
+    query = "DELETE FROM fantasy WHERE Description = \"%s\"" % job_id_variable
     # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
@@ -132,6 +120,17 @@ def add_or_delete_job(jobpage, cursor):
 
         break
 
+    # getting the difference between two date objects
+    # cursor.execute("SELECT * FROM jobs")
+    # row = cursor.fetchall() # [ (1,2,3,4) ]
+    # print(row[0][3])
+    # print(type(row[0][3]))
+    # time1 = row[0][3]
+    # time2 = datetime.date.today()
+    # print(type(time2))
+    # diff = time2 - time1
+    # print(diff.days)
+
 # Setup portion of the program. Take arguments and set up the script
 # You should not need to edit anything here.
 def main():
@@ -151,4 +150,3 @@ def main():
 # If you want to test if script works change time.sleep() to 10 seconds and delete your table in MySQL
 if __name__ == '__main__':
     main()
-
