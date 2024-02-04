@@ -55,7 +55,7 @@ def query_sql(cursor, query):
 # Add a new job
 def add_new_job(cursor, jobdetails):
     # extract all required columns
-    job_id_variable = html2text.html2text(jobdetails['Job_id'])
+    job_id_variable = html2text.html2text(jobdetails['jobs'])
     description = html2text.html2text(jobdetails['description'])
     date = jobdetails['publication_date'][0:10]
 
@@ -82,7 +82,7 @@ def add_new_job(cursor, jobdetails):
 # def check_if_job_exists(cursor, jobdetails):
 #     ##Add your code here
 #     # Job_Id is probably not what the data calls it and what I need to refer to.
-#     job_id_variable = html2text.html2text(jobdetails['Job_id'])
+#     job_id_variable = html2text.html2text(jobdetails['jobs'])
 #     query = "SELECT * FROM jobs WHERE Job_id = \"%s\"" % job_id_variable
 #     # query = "UPDATE" why was the code written this way
 #     return query_sql(cursor, query)
@@ -91,7 +91,7 @@ def add_new_job(cursor, jobdetails):
 # def delete_job(cursor, jobdetails):
 #     ##Add your code here
 #     # Job_Id is probably not what the data calls it and what I need to refer to.
-#     job_id_variable = html2text.html2text(jobdetails['Job_id'])
+#     job_id_variable = html2text.html2text(jobdetails['jobs'])
 #     query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_id_variable
 #     # query = "UPDATE" why was the code written this way
 #     return query_sql(cursor, query)
