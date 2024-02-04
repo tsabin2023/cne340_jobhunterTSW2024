@@ -70,7 +70,7 @@ def add_new_job(cursor, jobdetails):
 def check_if_job_exists(cursor, jobdetails):
     ##Add your code here
     job_id_variable = html2text.html2text(jobdetails['Job_id'])
-    query = "SELECT * FROM jobs WHERE Description = \"%s\"" % job_id_variable
+    query = "SELECT * FROM jobs WHERE Job_id = \"%s\"" % job_id_variable
     # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
@@ -78,7 +78,7 @@ def check_if_job_exists(cursor, jobdetails):
 def delete_job(cursor, jobdetails):
     ##Add your code here
     job_id_variable = html2text.html2text(jobdetails['Job_id'])
-    query = "DELETE FROM fantasy WHERE Description = \"%s\"" % job_id_variable
+    query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_id_variable
     # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
