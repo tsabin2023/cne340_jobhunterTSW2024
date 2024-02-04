@@ -40,47 +40,61 @@ def query_sql(cursor, query):
     cursor.execute(query)
     return cursor
 
+#"job-count": 1719, "jobs": [{"id": 1895122,
+# "url": "https://remotive.com/remote-jobs/all-others/compliance-coordinator-1895122",
+# "title": "Compliance Coordinator",
+# "company_name": "Vida",
+# "company_logo": "https://remotive.com/job/1895122/logo",
+# "category": "All others",
+# "tags": ["cloud", "AI/ML", "research", "healthcare", "MS Office", "google suite", "diversity"],
+# "job_type": "full_time",
+# "publication_date": "2024-02-02T18:51:38",
+# "candidate_required_location": "USA",
+# "salary": "", "description": "<div><b style= with a lot more I didn't copy over
 
 # Add a new job
 def add_new_job(cursor, jobdetails):
     # extract all required columns
+    job_id_variable = html2text.html2text(jobdetails['Job_id'])
     description = html2text.html2text(jobdetails['description'])
     date = jobdetails['publication_date'][0:10]
 
 
-    print(description)
-    print(type(description))
-    print()
-    print(date)
-    print(type(date))
+    #print(description)
+    #print(type(description))
+    #print()
+    #print(date)
+    #print(type(date))
 
-    print()
-    print()
+    #print()
+    #print()
 
-    print(jobdetails)
+    #print(jobdetails)
 
     # isn't inserting all the data, see table
-    query = cursor.execute("INSERT INTO jobs( Description, Created_at " ") "
-                        "VALUES(%s,%s)", (description, date))
+    query = cursor.execute("INSERT INTO jobs(Job_id, Description, Created_at " ") "
+                        "VALUES(%s,%s,%s)", (job_id_variable, description, date))
      # %s is what is needed for Mysqlconnector as SQLite3 uses ? the Mysqlconnector uses %s
     return query_sql(cursor, query)
 
 
 # Check if new job
-def check_if_job_exists(cursor, jobdetails):
-    ##Add your code here
-    job_id_variable = html2text.html2text(jobdetails['Job_id'])
-    query = "SELECT * FROM jobs WHERE Job_id = \"%s\"" % job_id_variable
-    # query = "UPDATE" why was the code written this way
-    return query_sql(cursor, query)
+# def check_if_job_exists(cursor, jobdetails):
+#     ##Add your code here
+#     # Job_Id is probably not what the data calls it and what I need to refer to.
+#     job_id_variable = html2text.html2text(jobdetails['Job_id'])
+#     query = "SELECT * FROM jobs WHERE Job_id = \"%s\"" % job_id_variable
+#     # query = "UPDATE" why was the code written this way
+#     return query_sql(cursor, query)
 
 # Deletes job
-def delete_job(cursor, jobdetails):
-    ##Add your code here
-    job_id_variable = html2text.html2text(jobdetails['Job_id'])
-    query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_id_variable
-    # query = "UPDATE" why was the code written this way
-    return query_sql(cursor, query)
+# def delete_job(cursor, jobdetails):
+#     ##Add your code here
+#     # Job_Id is probably not what the data calls it and what I need to refer to.
+#     job_id_variable = html2text.html2text(jobdetails['Job_id'])
+#     query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_id_variable
+#     # query = "UPDATE" why was the code written this way
+#     return query_sql(cursor, query)
 
 
 # Grab new jobs from a website, Parses JSON code and inserts the data into a list of dictionaries do not need to edit
