@@ -1,6 +1,6 @@
 # Tyler Sabin
 # CNE340 Winter Quarter 2024
-# 2/2/2024
+# 2/4/2024
 # follow instructions here and on Canvas to complete program
 # https://rtc.instructure.com/courses/2439016/assignments/31830474?module_item_id=79735018
 # code below modified by Tyler Sabin and Brian Huang
@@ -11,7 +11,7 @@ import mysql.connector
 import time
 import json
 import requests
-from datetime import date # why isn't this lighting up
+import datetime # why isn't this lighting up
 import html2text
 
 
