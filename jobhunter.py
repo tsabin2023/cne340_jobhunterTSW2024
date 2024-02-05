@@ -1,6 +1,6 @@
 # Tyler Sabin
 # CNE340 Winter Quarter 2024
-# 2/4/2024
+# 2/5/2024
 # follow instructions here and on Canvas to complete program
 # https://rtc.instructure.com/courses/2439016/assignments/31830474?module_item_id=79735018
 # code below modified by Tyler Sabin and Brian Huang
@@ -66,7 +66,7 @@ def add_new_job(cursor, jobdetails):
     print(jobdetails)
 
     # isn't inserting all the data, see table
-    query = cursor.execute("INSERT INTO jobs(Job_id, company,  Created_at " ", url, Title, Description) "
+    query = cursor.execute("INSERT INTO jobs(Job_id, company, Created_at, url, Title, Description) "
                         "VALUES(%s,%s,%s,%s,%s,%s)", (job_posting_id, company_called, date, web_address, job_title, description))
      # %s is what is needed for Mysqlconnector as SQLite3 uses ? the Mysqlconnector uses %s
     return query_sql(cursor, query)
