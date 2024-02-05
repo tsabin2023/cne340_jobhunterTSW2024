@@ -54,8 +54,8 @@ def add_new_job(cursor, jobdetails):
 
 
 
-    print(description)
-    print(type(description))
+    # print(description)
+    # print(type(description))
     # print()
     # print(date)
     # print(type(date))
@@ -63,7 +63,7 @@ def add_new_job(cursor, jobdetails):
     # print()
     # print()
 
-    print(jobdetails)
+    # print(jobdetails)
 
     # isn't inserting all the data, see table
     query = cursor.execute("INSERT INTO jobs(Job_id, company, Created_at, url, Title, Description) "
