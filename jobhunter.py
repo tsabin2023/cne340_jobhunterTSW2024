@@ -50,12 +50,12 @@ def add_new_job(cursor, jobdetails):
 
     print(description)
     print(type(description))
-    print()
-    print(date)
-    print(type(date))
-
-    print()
-    print()
+    # print()
+    # print(date)
+    # print(type(date))
+    #
+    # print()
+    # print()
 
     print(jobdetails)
 
@@ -69,16 +69,23 @@ def add_new_job(cursor, jobdetails):
 # Check if new job
 def check_if_job_exists(cursor, jobdetails):
     ##Add your code here
-    job_id_variable = html2text.html2text(jobdetails['Job_id'])
-    query = "SELECT * FROM jobs WHERE Job_id = \"%s\"" % job_id_variable
+    # v = { 'test': 123, 'no': [1, 2, 3] }
+    # v['no'] -> [1, 2, 3]
+    # v["test"] -> 123
+
+    # a = [1, 2, 3]
+    # a[1] -> 2
+
+    job_posting_id = jobdetails['id']
+    query = "SELECT * FROM jobs WHERE Job_id = \"%s\"" % job_posting_id
     # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
 # Deletes job
 def delete_job(cursor, jobdetails):
     ##Add your code here
-    job_id_variable = html2text.html2text(jobdetails['Job_id'])
-    query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_id_variable
+    job_id = jobdetails['id']
+    query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_id
     # query = "UPDATE" why was the code written this way
     return query_sql(cursor, query)
 
@@ -104,6 +111,7 @@ def add_or_delete_job(jobpage, cursor):
     # Add your code here to parse the job page
     for jobdetails in jobpage['jobs']:  # EXTRACTS EACH JOB FROM THE JOB LIST. It errored out until I specified jobs. This is because it needs to look at the jobs dictionary from the API. https://careerkarma.com/blog/python-typeerror-int-object-is-not-iterable/
         # Add in your code here to check if the job already exists in the DB
+
         check_if_job_exists(cursor, jobdetails)
         is_job_found = len(cursor.fetchall()) > 0  # https://stackoverflow.com/questions/2511679/python-number-of-rows-affected-by-cursor-executeselect
         if is_job_found:
