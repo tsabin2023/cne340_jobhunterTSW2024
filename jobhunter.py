@@ -28,7 +28,7 @@ def create_tables(cursor):
     # Creates table
     # Must set Title to CHARSET utf8 unicode Source: http://mysql.rjweb.org/doc.php/charcoll.
     # Python is in latin-1 and error (Incorrect string value: '\xE2\x80\xAFAbi...') will occur if Description is not in unicode format due to the json data
-    # cursor.execute("ALTER TABLE jobs CHANGE company company VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;") don't forget to use
+    # cursor.execute("ALTER TABLE jobs CHANGE company company VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;") with help
     cursor.execute('''CREATE TABLE IF NOT EXISTS jobs (id INT PRIMARY KEY auto_increment, Job_id varchar(50) , 
     company varchar (300), Created_at DATE, url varchar(30000), Title LONGBLOB, Description LONGBLOB ); ''')
     cursor.execute("ALTER TABLE jobs CHANGE company company VARCHAR(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;")
@@ -40,61 +40,54 @@ def query_sql(cursor, query):
     cursor.execute(query)
     return cursor
 
-#"job-count": 1719,
-# "jobs": [{"id": 1895122,
-# "url": "https://remotive.com/remote-jobs/all-others/compliance-coordinator-1895122",
-# "title": "Compliance Coordinator",
-# "company_name": "Vida",
-# "company_logo": "https://remotive.com/job/1895122/logo",
-# "category": "All others",
-# "tags": ["cloud", "AI/ML", "research", "healthcare", "MS Office", "google suite", "diversity"],
-# "job_type": "full_time",
-# "publication_date": "2024-02-02T18:51:38",
-# "candidate_required_location": "USA",
-# "salary": "", "description": "<div><b style= with a lot more I didn't copy over
 
 # Add a new job
 def add_new_job(cursor, jobdetails):
     # extract all required columns
-    #job_id_variable = html2text.html2text(jobdetails['jobs']) probably not fixed
     description = html2text.html2text(jobdetails['description'])
     date = jobdetails['publication_date'][0:10]
 
 
     print(description)
     print(type(description))
-    print()
-    print(date)
-    print(type(date))
-
-    print()
-    print()
+    # print()
+    # print(date)
+    # print(type(date))
+    #
+    # print()
+    # print()
 
     print(jobdetails)
 
     # isn't inserting all the data, see table
-    query = cursor.execute("INSERT INTO jobs(Job_id, Description, Created_at " ") "
+    query = cursor.execute("INSERT INTO jobs( Description, Created_at " ") "
                         "VALUES(%s,%s)", (description, date))
      # %s is what is needed for Mysqlconnector as SQLite3 uses ? the Mysqlconnector uses %s
     return query_sql(cursor, query)
 
+
 # Check if new job
-# def check_if_job_exists(cursor, jobdetails):
-#     ##Add your code here
-#     # Job_Id is probably not what the data calls it and what I need to refer to.
-#     job_id_variable = html2text.html2text(jobdetails['jobs'])
-#     query = "SELECT * FROM jobs WHERE Job_id = \"%s\"" % job_id_variable
-#     # query = "UPDATE" why was the code written this way
-#     return query_sql(cursor, query)
+def check_if_job_exists(cursor, jobdetails):
+    ##Add your code here
+    # v = { 'test': 123, 'no': [1, 2, 3] }
+    # v['no'] -> [1, 2, 3]
+    # v["test"] -> 123
+
+    # a = [1, 2, 3]
+    # a[1] -> 2
+
+    job_posting_id = jobdetails['id']
+    query = "SELECT * FROM jobs WHERE Job_id = \"%s\"" % job_posting_id
+    # query = "UPDATE" why was the code written this way
+    return query_sql(cursor, query)
 
 # Deletes job
-# def delete_job(cursor, jobdetails):
-#     ##Add your code here
-#     # Job_Id is probably not what the data calls it and what I need to refer to.
-#     job_id_variable = html2text.html2text(jobdetails['jobs'])
-#     query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_id_variable
-#     # query = "UPDATE" why was the code written this way
-#     return query_sql(cursor, query)
+def delete_job(cursor, jobdetails):
+    ##Add your code here
+    job_posting_id  = jobdetails['id']
+    query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_posting_id
+    # query = "UPDATE" why was the code written this way
+    return query_sql(cursor, query)
 
 
 # Grab new jobs from a website, Parses JSON code and inserts the data into a list of dictionaries do not need to edit
@@ -107,30 +100,31 @@ def fetch_new_jobs():
 
 # Main area of the code. Should not need to edit
 def jobhunt(cursor):
-     # Fetch jobs from website
+    # Fetch jobs from website
     jobpage = fetch_new_jobs()  # Gets API website and holds the json data in it as a list
-     # use below print statement to view list in json format
-     # print(jobpage)
-    #add_or_delete_job(jobpage, cursor)
+    # use below print statement to view list in json format
+    # print(jobpage)
+    add_or_delete_job(jobpage, cursor)
 
 
 def add_or_delete_job(jobpage, cursor):
-     # Add your code here to parse the job page
+    # Add your code here to parse the job page
     for jobdetails in jobpage['jobs']:  # EXTRACTS EACH JOB FROM THE JOB LIST. It errored out until I specified jobs. This is because it needs to look at the jobs dictionary from the API. https://careerkarma.com/blog/python-typeerror-int-object-is-not-iterable/
-         # Add in your code here to check if the job already exists in the DB
+        # Add in your code here to check if the job already exists in the DB
+
         check_if_job_exists(cursor, jobdetails)
         is_job_found = len(cursor.fetchall()) > 0  # https://stackoverflow.com/questions/2511679/python-number-of-rows-affected-by-cursor-executeselect
         if is_job_found:
-             # I need to return cursor or something like the job name or current job list
-             # Do I need to inform the user that the job already exists?
-             # return query_sql(cursor, query)
-             print("job already exists")
+            # I need to return cursor or something like the job name or current job list
+            # Do I need to inform the user that the job already exists?
+            # return query_sql(cursor, query)
+            print("job already exists")
         else:
-             # INSERT JOB
-             # Add in your code here to notify the user of a new posting. This code will notify the new user
-             # add_new_job(cursor, jobdetails)
-             print("new job found")
-             add_new_job(cursor, jobdetails)
+            # INSERT JOB
+            # Add in your code here to notify the user of a new posting. This code will notify the new user
+            # add_new_job(cursor, jobdetails)
+            print("new job found")
+            add_new_job(cursor, jobdetails)
 
         break
 
@@ -155,7 +149,6 @@ def main():
     create_tables(cursor)
 
     while True:  # Infinite Loops. Only way to kill it is to crash or manually crash it. We did this as a background process/passive scraper
-
         jobhunt(cursor)
         # check job expired
         time.sleep(21600)  # Sleep for 6h, this is ran every hour because API or web interfaces have request limits. Your reqest will get blocked.
