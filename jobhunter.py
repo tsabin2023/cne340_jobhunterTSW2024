@@ -132,7 +132,6 @@ def add_or_delete_job(jobpage, cursor):
             print("new job found")
             add_new_job(cursor, jobdetails)
 
-        break
 
     # getting the difference between two date objects
     # cursor.execute("SELECT * FROM jobs")
