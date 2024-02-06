@@ -11,7 +11,7 @@ import mysql.connector
 import time
 import json
 import requests
-import datetime # why isn't this lighting up
+import datetime # why isn't this lighting up?
 import html2text
 
 
@@ -113,6 +113,19 @@ def jobhunt(cursor):
     add_or_delete_job(jobpage, cursor)
 
 
+# def get_date_of_job_posting_vs_current_date(cursor):
+#     # getting the difference between two date objects
+#      cursor.execute("SELECT * FROM jobs")
+#      row = cursor.fetchall() # [ (1,2,3,4) ]
+#      print(row[0][3])
+#      print(type(row[0][3]))
+#      time1 = row[0][3]
+#      time2 = datetime.date.today()
+#      print(type(time2))
+#      diff = time2 - time1
+#      print(diff.days)
+
+
 def add_or_delete_job(jobpage, cursor):
     # Add your code here to parse the job page
     for jobdetails in jobpage['jobs']:  # EXTRACTS EACH JOB FROM THE JOB LIST. It errored out until I specified jobs. This is because it needs to look at the jobs dictionary from the API. https://careerkarma.com/blog/python-typeerror-int-object-is-not-iterable/
@@ -125,6 +138,16 @@ def add_or_delete_job(jobpage, cursor):
             # Do I need to inform the user that the job already exists?
             # return query_sql(cursor, query)
             print("job already exists")
+            # getting the difference between two date objects
+            cursor.execute("SELECT * FROM jobs")
+            row = cursor.fetchall()  # [ (1,2,3,4) ]
+            print(row[0][3])
+            print(type(row[0][3]))
+            time1 = row[0][3]
+            time2 = datetime.date.today()
+            print(type(time2))
+            diff = time2 - time1
+            print(diff.days)
         else:
             # INSERT JOB
             # Add in your code here to notify the user of a new posting. This code will notify the new user
@@ -132,17 +155,6 @@ def add_or_delete_job(jobpage, cursor):
             print("new job found")
             add_new_job(cursor, jobdetails)
 
-
-    # getting the difference between two date objects
-    # cursor.execute("SELECT * FROM jobs")
-    # row = cursor.fetchall() # [ (1,2,3,4) ]
-    # print(row[0][3])
-    # print(type(row[0][3]))
-    # time1 = row[0][3]
-    # time2 = datetime.date.today()
-    # print(type(time2))
-    # diff = time2 - time1
-    # print(diff.days)
 
 # Setup portion of the program. Take arguments and set up the script
 # You should not need to edit anything here.
