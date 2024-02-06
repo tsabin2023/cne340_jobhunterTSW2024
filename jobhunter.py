@@ -88,12 +88,12 @@ def check_if_job_exists(cursor, jobdetails):
     return query_sql(cursor, query)
 
 # Deletes job
-def delete_job(cursor, jobdetails):
+#def delete_job(cursor, jobdetails):
     ##Add your code here
-    job_posting_id  = jobdetails['id']
-    query = "DELETE FROM fantasy WHERE Job_id = \"%s\"" % job_posting_id
+    #job_posting_id  = jobdetails['id']
+    #query = "DELETE FROM jobs WHERE Job_id = \"%s\"" % job_posting_id
     # query = "UPDATE" why was the code written this way
-    return query_sql(cursor, query)
+    #return query_sql(cursor, query)
 
 
 # Grab new jobs from a website, Parses JSON code and inserts the data into a list of dictionaries do not need to edit
@@ -124,7 +124,10 @@ def get_date_of_job_posting_vs_current_date(cursor):
     print(type(time2))
     diff = time2 - time1
     print(diff.days)
-
+    job_age = diff.days
+    print(job_age)
+    print(type(job_age))
+    return job_age
 
 def add_or_delete_job(jobpage, cursor):
     # Add your code here to parse the job page
@@ -138,8 +141,7 @@ def add_or_delete_job(jobpage, cursor):
             # Do I need to inform the user that the job already exists?
             # return query_sql(cursor, query)
             print("job already exists")
-            # getting the difference between two date objects
-            get_date_of_job_posting_vs_current_date(cursor)
+
 
         else:
             # INSERT JOB
@@ -160,7 +162,7 @@ def main():
 
     while True:  # Infinite Loops. Only way to kill it is to crash or manually crash it. We did this as a background process/passive scraper
         jobhunt(cursor)
-        # check job expired
+        ## need to call extra credit code here.
         time.sleep(14400)  # Sleep for 4h, this is ran every hour because API or web interfaces have request limits. Your reqest will get blocked.
 
 
