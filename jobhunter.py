@@ -113,17 +113,17 @@ def jobhunt(cursor):
     add_or_delete_job(jobpage, cursor)
 
 
-# def get_date_of_job_posting_vs_current_date(cursor):
-#     # getting the difference between two date objects
-#      cursor.execute("SELECT * FROM jobs")
-#      row = cursor.fetchall() # [ (1,2,3,4) ]
-#      print(row[0][3])
-#      print(type(row[0][3]))
-#      time1 = row[0][3]
-#      time2 = datetime.date.today()
-#      print(type(time2))
-#      diff = time2 - time1
-#      print(diff.days)
+def get_date_of_job_posting_vs_current_date(cursor):
+     # getting the difference between two date objects
+    cursor.execute("SELECT * FROM jobs")
+    row = cursor.fetchall() # [ (1,2,3,4) ]
+    print(row[0][3])
+    print(type(row[0][3]))
+    time1 = row[0][3]
+    time2 = datetime.date.today()
+    print(type(time2))
+    diff = time2 - time1
+    print(diff.days)
 
 
 def add_or_delete_job(jobpage, cursor):
@@ -139,15 +139,8 @@ def add_or_delete_job(jobpage, cursor):
             # return query_sql(cursor, query)
             print("job already exists")
             # getting the difference between two date objects
-            cursor.execute("SELECT * FROM jobs")
-            row = cursor.fetchall()  # [ (1,2,3,4) ]
-            print(row[0][3])
-            print(type(row[0][3]))
-            time1 = row[0][3]
-            time2 = datetime.date.today()
-            print(type(time2))
-            diff = time2 - time1
-            print(diff.days)
+            get_date_of_job_posting_vs_current_date(cursor)
+
         else:
             # INSERT JOB
             # Add in your code here to notify the user of a new posting. This code will notify the new user
