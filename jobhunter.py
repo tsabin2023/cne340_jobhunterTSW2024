@@ -136,12 +136,15 @@ def add_or_delete_job(jobpage, cursor):
 
         check_if_job_exists(cursor, jobdetails)
         is_job_found = len(cursor.fetchall()) > 0  # https://stackoverflow.com/questions/2511679/python-number-of-rows-affected-by-cursor-executeselect
+
         if is_job_found:
             # I need to return cursor or something like the job name or current job list
             # Do I need to inform the user that the job already exists?
             # return query_sql(cursor, query)
             print("job already exists")
-
+        #job_age = get_date_of_job_posting_vs_current_date(cursor)
+        #if job_age > 14:
+        #print("job is over 14 days old and will be deleted from database")
 
         else:
             # INSERT JOB
@@ -162,7 +165,8 @@ def main():
 
     while True:  # Infinite Loops. Only way to kill it is to crash or manually crash it. We did this as a background process/passive scraper
         jobhunt(cursor)
-        ## need to call extra credit code here.
+        ## need to call extra credit code here?
+        # get_date_of_job_posting_vs_current_date(cursor) # only giving 1 row as it's not told to iterate though list.
         time.sleep(14400)  # Sleep for 4h, this is ran every hour because API or web interfaces have request limits. Your reqest will get blocked.
 
 
