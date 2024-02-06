@@ -128,6 +128,7 @@ def get_date_of_job_posting_vs_current_date(cursor):
     print(job_age)
     print(type(job_age))
     return job_age
+outside_function = get_date_of_job_posting_vs_current_date()
 
 def add_or_delete_job(jobpage, cursor):
     # Add your code here to parse the job page
@@ -142,6 +143,7 @@ def add_or_delete_job(jobpage, cursor):
             # Do I need to inform the user that the job already exists?
             # return query_sql(cursor, query)
             print("job already exists")
+            ## run function that checks 14 day deletion requirement
         #job_age = get_date_of_job_posting_vs_current_date(cursor)
         #if job_age > 14:
         #print("job is over 14 days old and will be deleted from database")
