@@ -1,6 +1,6 @@
 # Tyler Sabin
 # CNE340 Winter Quarter 2024
-# 2/5/2024
+# 2/6/2024
 # follow instructions here and on Canvas to complete program
 # https://rtc.instructure.com/courses/2439016/assignments/31830474?module_item_id=79735018
 # code below modified by Tyler Sabin and Brian Huang
@@ -11,7 +11,7 @@ import mysql.connector
 import time
 import json
 import requests
-import datetime # why isn't this lighting up?
+import datetime
 import html2text
 
 
@@ -88,13 +88,18 @@ def check_if_job_exists(cursor, jobdetails):
     return query_sql(cursor, query)
 
 # Deletes job
-#def delete_job(cursor, jobdetails):
+def delete_job(cursor, jobdetails):
     ##Add your code here
-    #job_posting_id  = jobdetails['id']
-    #query = "DELETE FROM jobs WHERE Job_id = \"%s\"" % job_posting_id
-    # query = "UPDATE" why was the code written this way
-    #return query_sql(cursor, query)
-
+    import datetime
+    job_age = get_date_of_job_posting_vs_current_date(cursor)
+    if job_age > 14:
+        print("job is over 14 days old and is being deleted")
+        job_posting_id = jobdetails['id']
+        query = "DELETE FROM jobs WHERE Job_id = \"%s\"" % job_posting_id
+    # query = "UPDATE"  why was the code written this way
+        return query_sql(cursor, query)
+    else:
+        print("job is less than 2 weeks old")
 
 # Grab new jobs from a website, Parses JSON code and inserts the data into a list of dictionaries do not need to edit
 def fetch_new_jobs():
@@ -115,6 +120,7 @@ def jobhunt(cursor):
 
 def get_date_of_job_posting_vs_current_date(cursor):
      # getting the difference between two date objects
+    import datetime
     cursor.execute("SELECT * FROM jobs")
     row = cursor.fetchall() # [ (1,2,3,4) ]
     print(row[0][3])
@@ -128,7 +134,7 @@ def get_date_of_job_posting_vs_current_date(cursor):
     print(job_age)
     print(type(job_age))
     return job_age
-outside_function = get_date_of_job_posting_vs_current_date()
+
 
 def add_or_delete_job(jobpage, cursor):
     # Add your code here to parse the job page
@@ -143,10 +149,7 @@ def add_or_delete_job(jobpage, cursor):
             # Do I need to inform the user that the job already exists?
             # return query_sql(cursor, query)
             print("job already exists")
-            ## run function that checks 14 day deletion requirement
-        #job_age = get_date_of_job_posting_vs_current_date(cursor)
-        #if job_age > 14:
-        #print("job is over 14 days old and will be deleted from database")
+            delete_job(cursor, jobdetails)
 
         else:
             # INSERT JOB
