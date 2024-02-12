@@ -1,6 +1,6 @@
 # Tyler Sabin
 # CNE340 Winter Quarter 2024
-# 2/10/2024
+# 2/12/2024
 # follow instructions here and on Canvas to complete program
 # https://rtc.instructure.com/courses/2439016/assignments/31830474?module_item_id=79735018
 # code below modified by Tyler Sabin and Brian Huang
@@ -19,7 +19,7 @@ import html2text
 # You may need to edit the connect function based on your local settings.#I made a password for my database because it is important to do so. Also make sure MySQL server is running or it will not connect
 def connect_to_sql():
     conn = mysql.connector.connect(user='root', password='',
-                                   host='127.0.0.1', database='cne340test')
+                                   host='127.0.0.1', database='cne340')
     return conn
 
 
@@ -51,7 +51,7 @@ def add_new_job(cursor, jobdetails):
     description = html2text.html2text(jobdetails['description'])
     query = cursor.execute("INSERT INTO jobs(Job_id, company, Created_at, url, Title, Description) "
                         "VALUES(%s,%s,%s,%s,%s,%s)", (job_posting_id, company_called, date, web_address, job_title, description))
-     # %s is what is needed for Mysqlconnector as SQLite3 uses ? the Mysqlconnector uses %s
+    # %s is what is needed for Mysqlconnector as SQLite3 uses ? the Mysqlconnector uses %s
     return query_sql(cursor, query)
 
 
@@ -65,12 +65,14 @@ def check_if_job_exists(cursor, jobdetails):
 # Deletes job
 def delete_job(cursor, jobdetails):
     ##Add your code here
+    # deletes job if over 14 days old
     import datetime
     job_age = get_date_of_job_posting_vs_current_date(cursor)
     if job_age > 14:
         job_posting_id = jobdetails['id']
         query = "DELETE FROM jobs WHERE Job_id = \"%s\"" % job_posting_id
         return query_sql(cursor, query)
+
 
 # Grab new jobs from a website, Parses JSON code and inserts the data into a list of dictionaries do not need to edit
 def fetch_new_jobs():
@@ -89,10 +91,10 @@ def jobhunt(cursor):
 
 
 def get_date_of_job_posting_vs_current_date(cursor):
-     # getting the difference between two date objects
+    # getting the difference between two date objects
     import datetime
     cursor.execute("SELECT * FROM jobs")
-    row = cursor.fetchall() # [ (1,2,3,4) ]
+    row = cursor.fetchall()
     time1 = row[0][3]
     time2 = datetime.date.today()
     diff = time2 - time1
@@ -107,7 +109,7 @@ def add_or_delete_job(jobpage, cursor):
         check_if_job_exists(cursor, jobdetails)
         is_job_found = len(cursor.fetchall()) > 0  # https://stackoverflow.com/questions/2511679/python-number-of-rows-affected-by-cursor-executeselect
         if is_job_found:
-            print("job already exists") # does this meet requirements?
+            print("job already exists")
             delete_job(cursor, jobdetails)
 
         else:
